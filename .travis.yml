@@ -10,3 +10,15 @@ before_install: # This is going to have a series of different commands that gets
 
 script: # This section contains all the different commands that needs to be executedto run our test suit
     - docker run -e CI=true ignaci00/docker-and-react-example npm run test
+
+deploy: # Configuration to tell Travis CI how to take our app and deploy it out to AWS
+    provider: elasticbeanstalk # Travis CI cames pre-configured to deploy our app to handful od different providers or hosting providers
+    region: "us-east-2" # The region is defined in the auto generated URL, before "elasticbeanstalk.com" part (...{us-east-2}.elasticbeanstalk.com ) 
+    app: "docker-and-react-example" # Given name of the app
+    env: "DockerAndReactExample-env"
+    bucket_name: "elasticbeanstalk-us-east-2-080935364902" # The S3 bucket is where Travis is gonna copy the base code our app (as a compress file) taken from github. S3 is essentially a hard-disk running in AWS
+    bucket_path: "docker-and-react-example" # The specific folder that is essentially the name of our project, cause the bucket gets reused for all the other elasticbeanstalk that you create
+    on:
+        branch: master # Anytime we push to the master branch that will be the time when the deploy step gets triggered
+    access_key_id: $AWS_ACCESS_KEY # AWS access keys provided from the local Travis CI environment
+    secret_access_key: $AWS_SECRET_KEY # AWS access keys provided from the local Travis CI environment
