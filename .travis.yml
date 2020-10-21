@@ -1,0 +1,12 @@
+language: generic
+
+sudo: required #Anytime we are making using of Docker we have to have superuser level permissions
+
+services:
+    - docker # Install a copy of docker for being ready to go
+
+before_install: # This is going to have a series of different commands that gets executed before our tests are ran, or deploy our project
+    - docker build -t ignaci00/docker-and-react-example -f Dockerfile.dev . # In this is case the previous step is to build our docker image
+
+script: # This section contains all the different commands that needs to be executedto run our test suit
+    - docker run -e CI=true ignaci00/docker-and-react-example npm run test
